@@ -1,5 +1,6 @@
 package com.skillforge.skillforge_monolith.entity;
 
+import com.skillforge.skillforge_monolith.common.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Skill {
+public class Skill extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

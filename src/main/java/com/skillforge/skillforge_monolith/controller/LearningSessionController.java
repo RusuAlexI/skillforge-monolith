@@ -3,12 +3,14 @@ package com.skillforge.skillforge_monolith.controller;
 import com.skillforge.skillforge_monolith.dto.request.LearningSessionRequest;
 import com.skillforge.skillforge_monolith.dto.response.LearningSessionResponse;
 import com.skillforge.skillforge_monolith.entity.LearningSession;
+import com.skillforge.skillforge_monolith.entity.User;
 import com.skillforge.skillforge_monolith.mapper.LearningSessionMapper;
 import com.skillforge.skillforge_monolith.service.LearningSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,5 +46,11 @@ public class LearningSessionController {
     public ResponseEntity<Map<String, Integer>> getTotalMinutes(@PathVariable Long skillId) {
         Integer total = sessionService.getTotalMinutesForSkill(skillId);
         return ResponseEntity.ok(Map.of("totalMinutes", total));
+    }
+
+    private User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
     }
 }

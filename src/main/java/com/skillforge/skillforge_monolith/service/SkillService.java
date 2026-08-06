@@ -4,6 +4,7 @@ import com.skillforge.skillforge_monolith.entity.Skill;
 import com.skillforge.skillforge_monolith.entity.User;
 import com.skillforge.skillforge_monolith.repository.SkillRepository;
 import com.skillforge.skillforge_monolith.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,32 +17,32 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class SkillService {
     private SkillRepository skillRepository;
     private UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public Optional<Skill> findById(String id) {
+    public Optional<Skill> findById(Long id) {
         return skillRepository.findById(id);
     }
 
     @Transactional(readOnly = true)
-    public Optional<Skill> findByIdWithSessions(String id) {
+    public Optional<Skill> findByIdWithSessions(Long id) {
         return skillRepository.findByIdWithSessions(id);
     }
 
     @Transactional(readOnly = true)
-    public List<Skill> findByUserId(String userId) {
+    public List<Skill> findByUserId(Long userId) {
         return skillRepository.findByUserId(userId);
     }
 
     @Transactional(readOnly = true)
-    public Page<Skill> findByUserId(String userId, Pageable pageable) {
+    public Page<Skill> findByUserId(Long userId, Pageable pageable) {
         return skillRepository.findByUserId(userId, pageable);
     }
 
-    public Skill createSkill(String userId, String name, String category, String description) {
+    public Skill createSkill(Long userId, String name, String category, String description) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found: " + userId));
         Skill skill = Skill.builder()
@@ -54,7 +55,7 @@ public class SkillService {
         return skillRepository.save(skill);
     }
 
-    public Skill updateSkill(String skillId, String name, String category, String description) {
+    public Skill updateSkill(Long skillId, String name, String category, String description) {
         Skill skill = skillRepository.findById(skillId)
                 .orElseThrow(() -> new EntityNotFoundException("Skill not found: " + skillId));
         skill.setName(name);
@@ -63,7 +64,7 @@ public class SkillService {
         return skillRepository.save(skill);
     }
 
-    public void deleteSkill(String skillId) {
+    public void deleteSkill(Long skillId) {
         Skill skill = skillRepository.findById(skillId)
                 .orElseThrow(() -> new EntityNotFoundException("Skill not found: " + skillId));
         User user = skill.getUser();
@@ -72,7 +73,7 @@ public class SkillService {
     }
 
     @Transactional(readOnly = true)
-    public long countByUserId(String userId) {
+    public long countByUserId(Long userId) {
         return skillRepository.countByUserId(userId);
     }
 }

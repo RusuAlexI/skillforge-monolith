@@ -11,19 +11,19 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface LearningSessionRepository extends JpaRepository<LearningSession, String> {
+public interface LearningSessionRepository extends JpaRepository<LearningSession, Long> {
 
-    List<LearningSession> findBySkillId(String skillId, Sort sort);
+    List<LearningSession> findBySkillId(Long skillId, Sort sort);
 
-    List<LearningSession> findBySkillIdAndSessionDateBetween(String skillId, LocalDate start, LocalDate end);
+    List<LearningSession> findBySkillIdAndSessionDateBetween(Long skillId, LocalDate start, LocalDate end);
 
     @Query("SELECT COALESCE(SUM(ls.durationMinutes), 0) FROM LearningSession ls WHERE ls.skill.id = :skillId")
-    Integer getTotalMinutesBySkillId(@Param("skillId") String skillId);
+    Integer getTotalMinutesBySkillId(@Param("skillId") Long skillId);
 
     @Query("SELECT ls.skill.id, COALESCE(SUM(ls.durationMinutes), 0) " +
             "FROM LearningSession ls WHERE ls.skill.user.id = :userId GROUP BY ls.skill.id")
-    List<Object[]> getTotalMinutesGroupedBySkillForUser(@Param("userId") String userId);
+    List<Object[]> getTotalMinutesGroupedBySkillForUser(@Param("userId") Long userId);
 
-    void deleteBySkillId(String skillId);
+    void deleteBySkillId(Long skillId);
 
 }

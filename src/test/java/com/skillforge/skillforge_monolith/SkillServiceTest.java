@@ -31,24 +31,24 @@ class SkillServiceTest {
 
     @Test
     void createSkill_ShouldReturnSavedSkill_WhenUserExists() {
-        User user = User.builder().id("u1").email("test@test.com").build();
+        User user = User.builder().id(1L).email("test@test.com").build();
         Skill skill = Skill.builder().name("Java").category("Programming").user(user).build();
 
-        when(userRepository.findById("u1")).thenReturn(Optional.of(user));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         // Correct Mockito syntax using the right any() matcher
         when(skillRepository.save(any(Skill.class))).thenReturn(skill);
 
-        Skill result = skillService.createSkill("u1", "Java", "Programming", "Learn Java");
+        Skill result = skillService.createSkill(1L, "Java", "Programming", "Learn Java");
 
         assertThat(result.getName()).isEqualTo("Java");
     }
 
     @Test
     void createSkill_ShouldThrowException_WhenUserNotFound() {
-        when(userRepository.findById("unknown")).thenReturn(Optional.empty());
+        when(userRepository.findById(0L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> skillService.createSkill("unknown", "Java", "Prog", ""))
+        assertThatThrownBy(() -> skillService.createSkill(0L, "Java", "Prog", ""))
                 .isInstanceOf(EntityNotFoundException.class);
     }
 }

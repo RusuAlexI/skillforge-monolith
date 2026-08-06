@@ -22,7 +22,7 @@ public class LearningSessionService {
     private LearningSessionRepository sessionRepository;
     private SkillRepository skillRepository;
 
-    public LearningSession logSession(String skillId, Integer durationMinutes,
+    public LearningSession logSession(Long skillId, Integer durationMinutes,
                                       LocalDate sessionDate, String notes) {
         Skill skill = skillRepository.findById(skillId)
                 .orElseThrow(() -> new EntityNotFoundException("Skill not found: " + skillId));
@@ -37,23 +37,23 @@ public class LearningSessionService {
     }
 
     @Transactional(readOnly = true)
-    public List<LearningSession> findBySkillId(String skillId, Sort sort) {
+    public List<LearningSession> findBySkillId(Long skillId, Sort sort) {
         return sessionRepository.findBySkillId(skillId, sort);
     }
 
     @Transactional(readOnly = true)
     public List<LearningSession> findBySkillAndDateRange(
-            String skillId, LocalDate start, LocalDate end) {
+            Long skillId, LocalDate start, LocalDate end) {
         return sessionRepository.findBySkillIdAndSessionDateBetween(skillId, start, end);
     }
 
     @Transactional(readOnly = true)
-    public Integer getTotalMinutesForSkill(String skillId) {
+    public Integer getTotalMinutesForSkill(Long skillId) {
         return sessionRepository.getTotalMinutesBySkillId(skillId);
     }
 
     @Transactional(readOnly = true)
-    public Map<String, Integer> getTotalMinutesGroupedBySkillForUser(String userId) {
+    public Map<String, Integer> getTotalMinutesGroupedBySkillForUser(Long userId) {
         List<Object[]> results = sessionRepository.getTotalMinutesGroupedBySkillForUser(userId);
         Map<String, Integer> resultMap = new HashMap<>();
         for (Object[] row : results) {

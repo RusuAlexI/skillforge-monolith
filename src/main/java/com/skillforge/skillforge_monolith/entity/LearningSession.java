@@ -8,7 +8,6 @@ import java.time.LocalDate;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode
 @ToString
 @Getter
@@ -17,7 +16,7 @@ import java.time.LocalDate;
 public class LearningSession extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skill_id", nullable = false)
@@ -32,43 +31,4 @@ public class LearningSession extends BaseEntity {
     @Column(length = 500)
     private String notes;
 
-//    public String getId() {
-//        return id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
-//
-//    public Skill getSkill() {
-//        return skill;
-//    }
-//
-//    public void setSkill(Skill skill) {
-//        this.skill = skill;
-//    }
-//
-//    public Integer getDurationMinutes() {
-//        return durationMinutes;
-//    }
-//
-//    public void setDurationMinutes(Integer durationMinutes) {
-//        this.durationMinutes = durationMinutes;
-//    }
-//
-//    public LocalDate getSessionDate() {
-//        return sessionDate;
-//    }
-//
-//    public void setSessionDate(LocalDate sessionDate) {
-//        this.sessionDate = sessionDate;
-//    }
-//
-//    public String getNotes() {
-//        return notes;
-//    }
-//
-//    public void setNotes(String notes) {
-//        this.notes = notes;
-//    }
 }

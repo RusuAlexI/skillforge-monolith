@@ -11,13 +11,12 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class UserService {
     private UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public Optional<User> findById(String id) {
+    public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 
@@ -41,6 +40,7 @@ public class UserService {
                 .password(password)  // Will hash in Week 1 Day 4
                 .name(name)
                 .build();
+//        user.
         return userRepository.save(user);
     }
 }

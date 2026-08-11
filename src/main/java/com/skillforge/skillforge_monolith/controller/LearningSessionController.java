@@ -20,6 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/sessions")
 @RequiredArgsConstructor
+@CrossOrigin
 public class LearningSessionController {
     private  LearningSessionService sessionService;
     private  LearningSessionMapper sessionMapper;

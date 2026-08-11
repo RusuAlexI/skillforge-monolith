@@ -23,6 +23,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/skills")
 @AllArgsConstructor
+@CrossOrigin()
 public class SkillController {
     private SkillService skillService;
     private SkillMapper skillMapper;

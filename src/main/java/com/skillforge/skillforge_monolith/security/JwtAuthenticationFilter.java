@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
             String header = request.getHeader("Authorization");
-
+//TODO add Authorization headr in frontend
             if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
                 String token = header.substring(7);
 

@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/skills")
@@ -89,5 +90,12 @@ public class SkillController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         skillService.deleteSkill(id);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<SkillResponse>> getAllSkills() {
+        User currentUser = getCurrentUser();
+        List<Skill> skills = skillService.findByUserId(currentUser.getId());
+        return ResponseEntity.ok(skillMapper.toResponseList(skills));
     }
 }

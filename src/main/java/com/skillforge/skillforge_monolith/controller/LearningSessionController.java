@@ -6,6 +6,7 @@ import com.skillforge.skillforge_monolith.entity.LearningSession;
 import com.skillforge.skillforge_monolith.entity.User;
 import com.skillforge.skillforge_monolith.mapper.LearningSessionMapper;
 import com.skillforge.skillforge_monolith.service.LearningSessionService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @CrossOrigin
 public class LearningSessionController {
-    private  LearningSessionService sessionService;
-    private  LearningSessionMapper sessionMapper;
+    private final LearningSessionService sessionService;
+    private final LearningSessionMapper sessionMapper;
 
     @PostMapping("/skill/{skillId}")
     @ResponseStatus(HttpStatus.CREATED)
@@ -45,7 +46,11 @@ public class LearningSessionController {
 
     @GetMapping("/skill/{skillId}")
     public List<LearningSessionResponse> getSessionsBySkill(@PathVariable Long skillId) {
-        return sessionMapper.toResponseList(sessionService.findBySkillId(skillId));
+        List<LearningSession> sessions = sessionService.findBySkillId(skillId);
+        if (sessions == null) {
+            return List.of();
+        }
+        return sessionMapper.toResponseList(sessions);
     }
 
     @GetMapping("/skill/{skillId}/total-minutes")

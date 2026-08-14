@@ -16,7 +16,9 @@ public interface SkillMapper {
     List<SkillResponse> toResponseList(List<Skill> skills);
 
     default Integer calculateTotalMinutes(Skill skill) {
-        if (skill.getSessions() == null) return 0;
+        if (skill == null || skill.getSessions() == null) {
+            return 0;
+        }
         return skill.getSessions().stream()
                 .mapToInt(LearningSession::getDurationMinutes)
                 .sum();

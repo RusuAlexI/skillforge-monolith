@@ -23,11 +23,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/skills")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @CrossOrigin()
 public class SkillController {
-    private SkillService skillService;
-    private SkillMapper skillMapper;
+    private final SkillService skillService;
+    private final SkillMapper skillMapper;
 
     @GetMapping("/user")
     public Page<SkillResponse> getByUser(

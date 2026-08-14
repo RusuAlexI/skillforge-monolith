@@ -6,12 +6,20 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface LearningSessionMapper {
+
     @Mapping(source = "skill.id", target = "skillId")
     @Mapping(source = "skill.name", target = "skillName")
     LearningSessionResponse toResponse(LearningSession session);
 
-    List<LearningSessionResponse> toResponseList(List<LearningSession> sessions);
+    default List<LearningSessionResponse> toResponseList(List<LearningSession> sessions) {
+        if (sessions == null) return List.of();
+        return sessions.stream()
+                .filter(s -> s != null && s.getSkill() != null)
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
 }

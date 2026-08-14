@@ -19,8 +19,8 @@ import java.util.Map;
 @Transactional
 @RequiredArgsConstructor
 public class LearningSessionService {
-    private LearningSessionRepository sessionRepository;
-    private SkillRepository skillRepository;
+    private final LearningSessionRepository sessionRepository;
+    private final SkillRepository skillRepository;
 
     public LearningSession logSession(Long skillId, Integer durationMinutes,
                                       LocalDate sessionDate, String notes) {
@@ -43,7 +43,8 @@ public class LearningSessionService {
 
     @Transactional(readOnly = true)
     public List<LearningSession> findBySkillId(Long skillId) {
-        return sessionRepository.findBySkillId(skillId);
+        List<LearningSession> sessions = sessionRepository.findBySkillId(skillId);
+        return sessions != null ? sessions : List.of();  // Never return null
     }
 
     @Transactional(readOnly = true)

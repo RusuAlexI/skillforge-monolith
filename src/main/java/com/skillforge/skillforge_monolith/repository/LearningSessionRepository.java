@@ -15,6 +15,8 @@ public interface LearningSessionRepository extends JpaRepository<LearningSession
 
     List<LearningSession> findBySkillId(Long skillId, Sort sort);
 
+    List<LearningSession> findBySkillId(Long skillId);
+
     List<LearningSession> findBySkillIdAndSessionDateBetween(Long skillId, LocalDate start, LocalDate end);
 
     @Query("SELECT COALESCE(SUM(ls.durationMinutes), 0) FROM LearningSession ls WHERE ls.skill.id = :skillId")

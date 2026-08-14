@@ -37,8 +37,13 @@ public class LearningSessionService {
     }
 
     @Transactional(readOnly = true)
-    public List<LearningSession> findBySkillId(Long skillId, Sort sort) {
+    public List<LearningSession> findBySkillIdAndSort(Long skillId, Sort sort) {
         return sessionRepository.findBySkillId(skillId, sort);
+    }
+
+    @Transactional(readOnly = true)
+    public List<LearningSession> findBySkillId(Long skillId) {
+        return sessionRepository.findBySkillId(skillId);
     }
 
     @Transactional(readOnly = true)

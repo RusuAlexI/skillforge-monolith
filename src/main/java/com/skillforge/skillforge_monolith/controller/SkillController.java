@@ -38,10 +38,9 @@ public class SkillController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SkillResponse> getById(@PathVariable Long id) {
-        return skillService.findByIdWithSessions(id)
-                .map(skillMapper::toResponse)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Skill skill = skillService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Skill not found: " + id));
+        return ResponseEntity.ok(skillMapper.toResponse(skill));
     }
 
     @PostMapping()

@@ -34,13 +34,18 @@ public class LearningSessionController {
         return sessionMapper.toResponse(session);
     }
 
-    @GetMapping("/skill/{skillId}")
+    @GetMapping("/skills/{skillId}")
     public List<LearningSessionResponse> getBySkill(
             @PathVariable Long skillId,
             @RequestParam(defaultValue = "sessionDate") String sortBy,
             @RequestParam(defaultValue = "desc") String direction) {
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
-        return sessionMapper.toResponseList(sessionService.findBySkillId(skillId, sort));
+        return sessionMapper.toResponseList(sessionService.findBySkillIdAndSort(skillId, sort));
+    }
+
+    @GetMapping("/skill/{skillId}")
+    public List<LearningSessionResponse> getSessionsBySkill(@PathVariable Long skillId) {
+        return sessionMapper.toResponseList(sessionService.findBySkillId(skillId));
     }
 
     @GetMapping("/skill/{skillId}/total-minutes")

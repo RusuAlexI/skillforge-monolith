@@ -1,113 +1,84 @@
 services:
-  postgres-user:
+  postgres:
     image: postgres:15
+    container_name: skillforge-postgres
     environment:
-      POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5433:5432"
     volumes:
-      - pg-user-data:/var/lib/postgresql/data
+      - pg-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres-skill:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: skill_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5434:5432"
-    volumes:
-      - pg-skill-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres-tracking:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: tracking_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5435:5432"
-    volumes:
-      - pg-tracking-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   eureka-server:
     build: ./eureka-server
+    container_name: skillforge-eureka
     ports:
       - "8761:8761"
-    depends_on:
-      - postgres-user
-      - postgres-skill
-      - postgres-tracking
 
   user-service:
     build: ./user-service
+    container_name: skillforge-user
     ports:
       - "8081:8081"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-user:5432/skillforge
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: secret
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
     depends_on:
-      - postgres-user
-      - eureka-server
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
 
   skill-service:
     build: ./skill-service
+    container_name: skillforge-skill
     ports:
       - "8082:8082"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-skill:5432/skill_db
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: secret
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/skill_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
     depends_on:
-      - postgres-skill
-      - eureka-server
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
 
   tracking-service:
     build: ./tracking-service
+    container_name: skillforge-tracking
     ports:
       - "8083:8083"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-tracking:5432/tracking_db
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: secret
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/tracking_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
     depends_on:
-      - postgres-tracking
-      - eureka-server
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
 
   api-gateway:
     build: ./api-gateway
+    container_name: skillforge-gateway
     ports:
       - "8080:8080"
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
     depends_on:
       - eureka-server
-      - user-service
-      - skill-service
-      - tracking-service
 
 volumes:
-  pg-user-data:
-  pg-skill-data:
-  pg-tracking-data:
+  pg-data:

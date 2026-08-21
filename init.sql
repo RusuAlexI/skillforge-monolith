@@ -1,0 +1,2 @@
+CREATE DATABASE skill_db;
+CREATE DATABASE tracking_db;
